@@ -66,17 +66,20 @@ def index():
 # Обробка форми
 @app.route('/run', methods=['POST'])
 def run():
-    coord_input = request.form['coordinates']
-    coordinates = np.array([list(map(float, point.split(','))) for point in coord_input.split(';')])
-    crossover_prob = float(request.form['crossover_prob'])
-    mutation_prob = float(request.form['mutation_prob'])
-    generations = int(request.form['generations'])
-    population_size = int(request.form['population_size'])
+    try:
+        coord_input = request.form['coordinates']
+        coordinates = np.array([list(map(float, point.split(','))) for point in coord_input.split(';')])
+        crossover_prob = float(request.form['crossover_prob'])
+        mutation_prob = float(request.form['mutation_prob'])
+        generations = int(request.form['generations'])
+        population_size = int(request.form['population_size'])
 
-    # Виконання генетичного алгоритму
-    best_mst_length, img_base64 = main(coordinates, crossover_prob, mutation_prob, generations, population_size)
-    
-    return jsonify({'mst_length': best_mst_length, 'graph': img_base64})
+        # Виконання генетичного алгоритму
+        best_mst_length, img_base64 = main(coordinates, crossover_prob, mutation_prob, generations, population_size)
+        
+        return jsonify({'mst_length': best_mst_length, 'graph': img_base64})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

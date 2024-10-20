@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MST Search</title>
+  </head>
+  <body>
+    <h1>Знайти мінімальне остове дерево</h1>
+    <form id="form">
+      <label for="coordinates">Координати (x1,y1;x2,y2;...):</label><br />
+      <input type="text" id="coordinates" name="coordinates" required /><br />
+      <label for="crossover_prob">Ймовірність схрещування:</label><br />
+      <input
+        type="number"
+        id="crossover_prob"
+        name="crossover_prob"
+        step="0.01"
+        required
+      /><br />
+      <label for="mutation_prob">Ймовірність мутації:</label><br />
+      <input
+        type="number"
+        id="mutation_prob"
+        name="mutation_prob"
+        step="0.01"
+        required
+      /><br />
+      <label for="generations">Кількість поколінь:</label><br />
+      <input type="number" id="generations" name="generations" required /><br />
+      <label for="population_size">Розмір популяції:</label><br />
+      <input
+        type="number"
+        id="population_size"
+        name="population_size"
+        required
+      /><br /><br />
+      <input type="submit" value="Запустити" />
+    </form>
+    <div id="result"></div>
+    <script>
+      document.getElementById("form").onsubmit = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const response = await fetch("/run", {
+          method: "POST",
+          body: formData,
+        });
+        const data = await response.json();
+        if (data.error) {
+          document.getElementById("result").innerText =
+            "Помилка: " + data.error;
+        } else {
+          document.getElementById("result").innerHTML = `
+                    <h2>Довжина мінімального остового дерева: ${data.mst_length}</h2>
+                    <img src="data:image/png;base64,${data.graph}" alt="Графік">
+                `;
+        }
+      };
+    </script>
+  </body>
+</html>
