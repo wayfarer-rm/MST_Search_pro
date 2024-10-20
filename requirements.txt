@@ -1,0 +1,5 @@
+flask
+deap
+numpy
+matplotlib
+scipy
