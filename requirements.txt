@@ -3,3 +3,4 @@ deap
 numpy
 matplotlib
 scipy
+gunicorn
